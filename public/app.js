@@ -351,7 +351,14 @@ function addChat(name, text, mine) {
 
 const params = new URLSearchParams(location.search);
 if (params.get('room')) els.room.value = params.get('room').toUpperCase();
-els.name.value = localStorage.getItem('wt-name') || '';
+function rememberName(value) {
+  try { localStorage.setItem('wt-name', value); } catch (_) { /* storage blocked */ }
+}
+function recallName() {
+  try { return localStorage.getItem('wt-name') || ''; } catch (_) { return ''; }
+}
+
+els.name.value = recallName();
 (els.room.value ? els.name : els.room).focus();
 
 const WORDS = ['POPCORN', 'SOFA', 'RERUN', 'MATINEE', 'INTERMISSION', 'CREDITS', 'PROJECTOR'];
@@ -370,14 +377,27 @@ function join() {
   if (!name) return fail('Enter a name so the other person knows who did what.');
   if (!room) return fail('Enter a room code. Letters, numbers and dashes.');
 
-  localStorage.setItem('wt-name', name);
+  if (typeof io === 'undefined') {
+    return fail('The page loaded without its connection script. Open it through the server address (http://localhost:3000 or your Render URL), not by double-clicking index.html.');
+  }
+
+  rememberName(name);
   els.setupError.hidden = true;
   els.join.disabled = true;
 
   socket = io();
   wireSocket();
 
+  socket.on('connect_error', (err) => {
+    fail(`Can't reach the server: ${err.message}. Is it still running?`);
+  });
+
+  const noReply = setTimeout(() => {
+    fail('The server accepted the connection but never answered. Check the server log for an error.');
+  }, 8000);
+
   socket.emit('join', { name, room }, (res) => {
+    clearTimeout(noReply);
     els.join.disabled = false;
     if (!res || !res.ok) return fail((res && res.error) || 'Could not join that room.');
 
