@@ -42,9 +42,10 @@ let socket = null;
 let myName = '';
 let roomCode = '';
 
-let mode = null;          // 'youtube' | 'direct'
+let mode = null;          // 'youtube' | 'dailymotion' | 'direct'
 let current = null;       // { type, src, label }
 let yt = null;            // YT.Player instance
+let dm = null;            // Dailymotion player instance
 let ytCuedResolve = null;
 
 let localPlaying = false; // what our own player is meant to be doing
@@ -93,29 +94,33 @@ const ytApiReady = new Promise((resolve) => {
 function getTime() {
   try {
     if (mode === 'youtube' && yt && yt.getCurrentTime) return yt.getCurrentTime() || 0;
+    if (mode === 'dailymotion' && dm) return dm.currentTime || 0;
     if (mode === 'direct') return els.html5.currentTime || 0;
-  } catch (_) { /* player not ready yet */ }
+  } catch (_) {}
   return 0;
 }
 
 function getDuration() {
   try {
     if (mode === 'youtube' && yt && yt.getDuration) return yt.getDuration() || 0;
+    if (mode === 'dailymotion' && dm) return dm.duration || 0;
     if (mode === 'direct') return Number.isFinite(els.html5.duration) ? els.html5.duration : 0;
-  } catch (_) { /* player not ready yet */ }
+  } catch (_) {}
   return 0;
 }
 
 function reallyPlaying() {
   try {
     if (mode === 'youtube' && yt && yt.getPlayerState) return yt.getPlayerState() === 1;
+    if (mode === 'dailymotion' && dm) return !dm.getState().paused;
     if (mode === 'direct') return !els.html5.paused && !els.html5.ended;
-  } catch (_) { /* player not ready yet */ }
+  } catch (_) {}
   return false;
 }
 
 function doPlay() {
   if (mode === 'youtube' && yt) yt.playVideo();
+  else if (mode === 'dailymotion' && dm) dm.play();
   else if (mode === 'direct') {
     const p = els.html5.play();
     if (p && p.catch) p.catch(() => showGesture());
@@ -124,12 +129,14 @@ function doPlay() {
 
 function doPause() {
   if (mode === 'youtube' && yt) yt.pauseVideo();
+  else if (mode === 'dailymotion' && dm) dm.pause();
   else if (mode === 'direct') els.html5.pause();
 }
 
 function doSeek(seconds) {
   const t = Math.max(0, seconds);
   if (mode === 'youtube' && yt) yt.seekTo(t, true);
+  else if (mode === 'dailymotion' && dm) dm.seek(t);
   else if (mode === 'direct') els.html5.currentTime = t;
 }
 
@@ -175,28 +182,32 @@ async function ensureVideo(video) {
   els.nowPlaying.hidden = false;
   els.nowPlaying.textContent = `Now playing: ${video.label}`;
 
+  els.ytWrap.classList.remove('on');
+  els.dmWrap.classList.remove('on');
+  els.html5.classList.remove('on');
+
   if (video.type === 'youtube') {
     mode = 'youtube';
     els.html5.pause();
-    els.html5.removeAttribute('src');
-    els.html5.load();
-    els.html5.classList.remove('on');
     els.ytWrap.classList.add('on');
-
     if (!yt) {
       await createYtPlayer(video.src);
     } else {
-      const cued = new Promise((resolve) => { ytCuedResolve = resolve; });
       yt.cueVideoById(video.src);
-      await Promise.race([cued, new Promise((r) => setTimeout(r, 2500))]);
+    }
+  } else if (video.type === 'dailymotion') {
+    mode = 'dailymotion';
+    els.html5.pause();
+    els.dmWrap.classList.add('on');
+    if (!dm) {
+      dm = await dailymotion.createPlayer('player-dm', { video: video.src });
+    } else {
+      dm.load({ video: video.src });
     }
   } else {
     mode = 'direct';
-    els.ytWrap.classList.remove('on');
-    if (yt && yt.stopVideo) yt.stopVideo();
     els.html5.classList.add('on');
     els.html5.src = video.src;
-    await Promise.race([once(els.html5, 'loadedmetadata', 8000), new Promise((r) => setTimeout(r, 8000))]);
   }
 }
 
