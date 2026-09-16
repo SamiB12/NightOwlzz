@@ -67,6 +67,8 @@ function snapshot(room) {
 
 const YT_PATTERN =
   /(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+const DM_PATTERN =
+  /(?:dailymotion\.com\/(?:video|embed\/video)\/|dai\.ly\/)([A-Za-z0-9]+)/;
 
 function parseVideo(rawUrl) {
   const url = String(rawUrl || '').trim();
@@ -75,7 +77,9 @@ function parseVideo(rawUrl) {
   const yt = url.match(YT_PATTERN);
   if (yt) return { type: 'youtube', src: yt[1], label: `YouTube · ${yt[1]}` };
 
-  // A bare 11-character YouTube ID pasted on its own.
+  const dm = url.match(DM_PATTERN);
+  if (dm) return { type: 'dailymotion', src: dm[1], label: `Dailymotion · ${dm[1]}` };
+
   if (/^[A-Za-z0-9_-]{11}$/.test(url)) {
     return { type: 'youtube', src: url, label: `YouTube · ${url}` };
   }
@@ -85,9 +89,7 @@ function parseVideo(rawUrl) {
     try {
       const parsed = new URL(url);
       label = decodeURIComponent(parsed.pathname.split('/').pop()) || parsed.hostname;
-    } catch (_) {
-      /* keep the raw string */
-    }
+    } catch (_) {}
     return { type: 'direct', src: url, label };
   }
 
