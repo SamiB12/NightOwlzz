@@ -1,0 +1,17 @@
+{
+  "name": "watch-together",
+  "version": "1.0.0",
+  "description": "A synced watch-party site for watching YouTube videos and direct video files together remotely.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  },
+  "license": "MIT"
+}

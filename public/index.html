@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Watch Together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Setup -->
+<main id="setup" class="setup">
+  <div class="setup-card">
+    <h1>Watch Together</h1>
+    <p class="setup-lede">Same video, same second, two different couches. Pick a room code and send the link to whoever you're watching with.</p>
+
+    <label for="name-input">Your name</label>
+    <input id="name-input" type="text" maxlength="24" placeholder="Jamie" autocomplete="nickname" />
+
+    <label for="room-input">Room code</label>
+    <div class="row">
+      <input id="room-input" type="text" maxlength="24" placeholder="MOVIE-NIGHT" autocomplete="off" />
+      <button id="dice" class="ghost" type="button" title="Use a random code">Random</button>
+    </div>
+
+    <button id="join" class="primary" type="button">Enter room</button>
+    <p id="setup-error" class="error" hidden></p>
+  </div>
+</main>
+
+<!-- Room -->
+<div id="room" class="room" hidden>
+  <header class="bar">
+    <span class="mark">Watch Together</span>
+    <span class="room-code" id="room-label"></span>
+    <span class="watchers" id="watchers"></span>
+    <button id="copy-link" class="ghost" type="button">Copy invite link</button>
+  </header>
+
+  <div class="layout">
+    <section class="stage-wrap">
+      <div class="stage" id="stage">
+        <div id="yt-wrap" class="player-layer"><div id="player-yt"></div></div>
+        <video id="player-html5" class="player-layer" playsinline preload="metadata" tabindex="-1"></video>
+
+        <div id="empty" class="overlay">
+          <p>Nothing loaded yet. Paste a link below to start.</p>
+        </div>
+
+        <button id="gesture" class="overlay gesture" type="button" hidden>
+          <span>Your browser paused this until you clicked. Tap to catch up.</span>
+        </button>
+      </div>
+
+      <div class="controls">
+        <button id="toggle" class="play" type="button" aria-label="Play">
+          <svg viewBox="0 0 24 24" class="icon-play" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+          <svg viewBox="0 0 24 24" class="icon-pause" aria-hidden="true"><path d="M7 5h3.2v14H7zm6.8 0H17v14h-3.2z"/></svg>
+        </button>
+
+        <span class="time" id="time-current">0:00</span>
+        <input id="scrub" class="scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek" />
+        <span class="time muted" id="time-total">0:00</span>
+
+        <button id="resync" class="ghost" type="button" title="Jump back to everyone else's position">Resync</button>
+      </div>
+
+      <form id="load-form" class="load-form" autocomplete="off">
+        <input id="url-input" type="text" placeholder="YouTube link, or a direct .mp4 / .webm URL" />
+        <button class="primary" type="submit">Load video</button>
+      </form>
+      <p id="load-error" class="error" hidden></p>
+      <p class="now-playing" id="now-playing" hidden></p>
+    </section>
+
+    <aside class="rail">
+      <section class="panel activity-panel">
+        <h2>Activity</h2>
+        <ul id="activity" class="activity"></ul>
+      </section>
+
+      <section class="panel chat-panel">
+        <h2>Chat</h2>
+        <ul id="chat" class="chat"></ul>
+        <form id="chat-form" class="chat-form" autocomplete="off">
+          <input id="chat-input" type="text" maxlength="500" placeholder="Say something" />
+          <button class="send" type="submit" aria-label="Send message">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 20.4 21 12 3.6 3.6 3.6 10.2 15 12 3.6 13.8z"/></svg>
+          </button>
+        </form>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
