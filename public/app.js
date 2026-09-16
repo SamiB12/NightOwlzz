@@ -457,3 +457,12 @@ els.copyLink.addEventListener('click', async () => {
   }
   setTimeout(() => { els.copyLink.textContent = 'Copy invite link'; }, 1800);
 });
+
+$('fullscreen').addEventListener('click', () => {
+  const stage = $('stage');
+  if (!document.fullscreenElement) {
+    stage.requestFullscreen().catch((err) => console.error(err));
+  } else {
+    document.exitFullscreen();
+  }
+});
