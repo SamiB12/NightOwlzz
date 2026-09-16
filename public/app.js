@@ -160,11 +160,10 @@ function onYtStateChange(event) {
     ytCuedResolve = null;
   }
   if (event.data === YT.PlayerState.ENDED) setPlayButton(false);
-  if (!applying) {
-    // Reflect reality in the button without emitting anything: only our own
-    // controls are allowed to broadcast.
-    if (event.data === YT.PlayerState.PLAYING) setPlayButton(true);
-  }
+  iif (event.data === YT.PlayerState.PLAYING) {
+  hideGesture();
+  if (!applying) setPlayButton(true);
+}
 }
 
 async function ensureVideo(video) {
