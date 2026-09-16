@@ -466,3 +466,18 @@ $('fullscreen').addEventListener('click', () => {
     document.exitFullscreen();
   }
 });
+
+const raisaBtn = $('raisa-btn');
+if (raisaBtn) {
+  raisaBtn.addEventListener('click', () => {
+    if (!mode) return;
+    
+    // Pause playback locally & broadcast to room
+    doPause();
+    setPlayButton(false);
+    if (socket) {
+      socket.emit('pause', { time: getTime() });
+      socket.emit('chat', { text: "💬 Raisa's conversation time!" });
+    }
+  });
+}
