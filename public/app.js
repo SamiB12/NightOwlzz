@@ -160,10 +160,10 @@ function onYtStateChange(event) {
     ytCuedResolve = null;
   }
   if (event.data === YT.PlayerState.ENDED) setPlayButton(false);
-  iif (event.data === YT.PlayerState.PLAYING) {
-  hideGesture();
-  if (!applying) setPlayButton(true);
-}
+  if (event.data === YT.PlayerState.PLAYING) {
+    hideGesture();
+    if (!applying) setPlayButton(true);
+  }
 }
 
 async function ensureVideo(video) {
