@@ -367,3 +367,16 @@ input[type="text"]:focus { border-color: var(--lamp-dim); outline: none; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+#raisa-btn {
+  border-color: #ff85c0;
+  color: #ffadd2;
+  background: rgba(255, 133, 192, 0.1);
+  white-space: nowrap;
+}
+
+#raisa-btn:hover {
+  background: rgba(255, 133, 192, 0.25);
+  border-color: #ffadd2;
+  color: #ffffff;
+}
