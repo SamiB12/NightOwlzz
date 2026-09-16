@@ -16,7 +16,8 @@ const els = {
   copyLink: $('copy-link'),
 
   ytWrap: $('yt-wrap'),
-  html5: $('player-html5'),
+dmWrap: $('dm-wrap'),
+html5: $('player-html5'),
   empty: $('empty'),
 
 
