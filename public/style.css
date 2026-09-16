@@ -190,6 +190,11 @@ input[type="text"]:focus { border-color: var(--lamp-dim); outline: none; }
   font: inherit;
 }
 
+/* Add this line right below .overlay */
+.overlay[hidden] {
+  display: none !important;
+}
+
 .gesture { color: var(--text); }
 .gesture span {
   border: 1px solid var(--lamp-dim);
