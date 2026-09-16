@@ -234,8 +234,8 @@ function watchForBlockedPlayback() {
   }, 1500);
 }
 
-function showGesture() { els.gesture.hidden = false; }
-function hideGesture() { els.gesture.hidden = true; }
+function showGesture() { }
+function hideGesture() { }
 
 function setPlayButton(playing) {
   localPlaying = playing;
@@ -298,12 +298,6 @@ els.scrub.addEventListener('change', () => {
 });
 
 els.resync.addEventListener('click', () => {
-  if (socket) socket.emit('resync');
-});
-
-els.gesture.addEventListener('click', () => {
-  hideGesture();
-  doPlay();               // must happen inside the click to satisfy autoplay rules
   if (socket) socket.emit('resync');
 });
 
