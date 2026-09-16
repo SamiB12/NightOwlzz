@@ -18,7 +18,7 @@ const els = {
   ytWrap: $('yt-wrap'),
   html5: $('player-html5'),
   empty: $('empty'),
-  gesture: $('gesture'),
+
 
   toggle: $('toggle'),
   scrub: $('scrub'),
