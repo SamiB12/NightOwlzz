@@ -375,6 +375,12 @@ input[type="text"]:focus { border-color: var(--lamp-dim); outline: none; }
   white-space: nowrap;
 }
 
+#iframe-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 #raisa-btn:hover {
   background: rgba(255, 133, 192, 0.25);
   border-color: #ffadd2;
