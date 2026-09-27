@@ -15,8 +15,10 @@ const els = {
   watchers: $('watchers'),
   copyLink: $('copy-link'),
 
-  ytWrap: $('yt-wrap'),
+ytWrap: $('yt-wrap'),
 dmWrap: $('dm-wrap'),
+iframeWrap: $('iframe-wrap'),
+iframe: $('player-iframe'),
 html5: $('player-html5'),
   empty: $('empty'),
 
