@@ -186,6 +186,7 @@ async function ensureVideo(video) {
 
   els.ytWrap.classList.remove('on');
   els.dmWrap.classList.remove('on');
+  els.iframeWrap.classList.remove('on');
   els.html5.classList.remove('on');
 
   if (video.type === 'youtube') {
@@ -206,6 +207,11 @@ async function ensureVideo(video) {
     } else {
       dm.load({ video: video.src });
     }
+  } else if (video.type === 'iframe') {
+    mode = 'iframe';
+    els.html5.pause();
+    els.iframeWrap.classList.add('on');
+    els.iframe.src = video.src;
   } else {
     mode = 'direct';
     els.html5.classList.add('on');
