@@ -69,6 +69,8 @@ const YT_PATTERN =
   /(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
 const DM_PATTERN =
   /(?:dailymotion\.com\/(?:video|embed\/video)\/|dai\.ly\/)([A-Za-z0-9]+)/;
+const LOOKMOVIE_PATTERN =
+  /https?:\/\/(?:www\.)?lookmovie2\.to\/movie\/([a-zA-Z0-9-]+)/;
 
 function parseVideo(rawUrl) {
   const url = String(rawUrl || '').trim();
@@ -79,6 +81,9 @@ function parseVideo(rawUrl) {
 
   const dm = url.match(DM_PATTERN);
   if (dm) return { type: 'dailymotion', src: dm[1], label: `Dailymotion · ${dm[1]}` };
+
+  const lm = url.match(LOOKMOVIE_PATTERN);
+  if (lm) return { type: 'iframe', src: url, label: `LookMovie · ${lm[1]}` };
 
   if (/^[A-Za-z0-9_-]{11}$/.test(url)) {
     return { type: 'youtube', src: url, label: `YouTube · ${url}` };
